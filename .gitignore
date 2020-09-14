@@ -33,5 +33,60 @@ from IPython.display import display
 from PIL import Image
 classifier.fit_generator(training_set,steps_per_epoch=260,epochs=5,validation_data=test_set,validation_steps=260)
 
+#2.Face Detection Algorithm
+import numpy as np
+import cv2
+
+face_classifier = cv2.CascadeClassifier('Haarcascades/haarcascade_frontalface_default.xml')
+
+image = cv2.imread('C:/Users/pc/Downloads/datasets/kp_3.jpg')
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+
+if faces is ():
+    print("No faces found")
+
+for i in range(0,2):
+    for (x,y,w,h) in faces:
+        cv2.rectangle(image, (x,y), (x+w,y+h), (127,0,255), 3)
+        path='C:/Users/pc/Downloads/datasets/Kp/kp'+str(i)+'.jpg'
+        #cv2.imwrite(path,image[y:y + h, x:x + w])
+        fn_name="rahul"
+        cv2.putText(image, fn_name, (x - 5, y - 5), cv2.FONT_HERSHEY_PLAIN,1,(0, 255, 0))
+        cv2.imshow('Face Detection', image)
+       
+        cv2.waitKey(0)
+    
+cv2.destroyAllWindows()
+
+
+#3.Record Data into database
+import mysql.connector
+mydb=mysql.connector.connect(user='root',password='',host='localhost')
+mycursor=mydb.cursor()
+mycursor.execute("SHOW DATABASES ")
+for db in mycursor:
+    print(db)
+mydb=mysql.connector.connect(user='root',password='',host='localhost',database="student2")
+mycursor=mydb.cursor()
+mycursor.execute("CREATE TABLE ATTENDANCE_SHEET(Sch_No INTEGER(200),NAME VARCHAR(20),ATTENDACE INTEGER(100))")
+sqlformula="INSERT INTO ATTENDANCE_SHEET(Sch_No,NAME,ATTENDACE)VALUES(%s %s %s)"
+a=(1,"Rahul",0)
+mycursor.execute("INSERT INTO ATTENDANCE_SHEET(Sch_No,ATTENDACE) VALUES(3,0)")
+attendance=0
+for i in range(0,3):
+    student=(i+1,l[i],attendance)
+    mycursor.execute(sqlformula,student)
+name="kp"
+if name=="kp":
+    mycursor.execute("UPDATE ATTENDANCE_SHEET SET ATTENDACE =ATTENDACE +1 where Sch_No=1")
+elif name=="Mohit":
+    mycursor.execute("UPDATE ATTENDANCE_SHEET SET ATTENDACE E=ATTENDACE +1 where Sch_No=2")
+elif name=="Rahul":
+    mycursor.execute("UPDATE ATTENDANCE_SHEET SET ATTENDACE=ATTENDACE +1 where Sch_No=3")
+mycursor.execute("SELECT * FROM ATTENDANCE_SHEET")
+for data in mycursor:
+    print(data)
 
 
